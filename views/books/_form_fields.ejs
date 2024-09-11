@@ -1,0 +1,35 @@
+<div>
+    <label for="title">Title</label>
+    <input type="text" name="title"><%=book.title%> <!--<= in percent> make this as html output -->
+</div>
+<div>
+    <label for="">Author</label>
+    <select name="author" id="">
+        <% authors.forEach(author => {  %>
+            <% if (author.id=== book.author){ %>
+                <option selected label="<%= author.name %>" value="<%= author.id%>">
+            <% } else { %>
+                <option label="<%= author.name %>" value="<%= author.id%>">
+            <%}%>
+        <% }); %>
+    </select>
+</div>
+<div>
+    <label for="">Publish Date</label>
+    <input type="date" name="publishDate" id="" 
+           value="<%= book.publishDate == null?"":book.publishDate.toISOString().split('T')[0] %>"> <!--ex: 2024-09-06T2202 so we split just to get the date-->
+</div>
+<div>
+    <label for="">Page Count</label>
+    <input type="number" name="pageCount" id="" min="1"
+           value="<%= book.publishDate == null?"":book.pageCount %>">
+</div>
+<div>
+    <label for="">Cover</label>
+    <input type="file" name="cover" class="filepond"> 
+</div>
+<div>
+    <label for="">Description</label>
+    <textarea type="file" name="description"><%= book.description %> </textarea>
+</div>
+

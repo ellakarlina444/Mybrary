@@ -1,0 +1,8 @@
+<h2>New Book</h2>
+
+ <!--<form action="/books" method="POST" enctype="multipart/form-data"> //this action go to post method on author routes and  enctype="multipart/form-data" is sending multpart form instead of single string--> 
+ <form action="/books" method="POST"> <!--//this action is sending of single string which of json object--> 
+    <%- include('_form_fields.ejs')  %> <!--<- in percent> make this as file output -->
+    <a href="/books">Cancel</a>
+    <button type="submit">Create</button>
+</form>
