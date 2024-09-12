@@ -1,0 +1,7 @@
+<h2>Edit authors</h2>
+
+ <form action="/authors/<%= author.id %>?_method=PUT" method="POST"> <!--//this action go to post method on author routes -->
+    <%- include('_form_fields.ejs')  %> <!--<- in percent> make this as file output -->
+    <a href="/authors/<%= author.id %>">Cancel</a>
+    <button type="submit">Update</button>
+</form>

@@ -11,6 +11,7 @@ const express = require("express");
 const app = express();
 const expressLayout = require("express-ejs-layouts");
 const bodyParser=require('body-parser');
+const methodOverride=require('method-override')
 
 app.set("view engine", "ejs");// set the view engine to ejs
 app.set("layout", "layouts/layout"); //set seluruh layout di folder layouts/layout di dalam folder views
@@ -18,7 +19,7 @@ app.set("views", __dirname + "/views"); //set seluruh tampilan di folder views
 app.use(expressLayout); //gunakan layout dengan library express-ejs-layouts
 app.use(express.static('public')); //public folder dimana js style dll di public folder
 app.use(bodyParser.urlencoded({limit:'10mb',extended:false}));
-
+app.use(methodOverride('_method')); '_method is what the parameter to be'
 const indexRouter=require('./routes/index');
 const authorRouter=require('./routes/authors');
 const bookRouter=require('./routes/books');

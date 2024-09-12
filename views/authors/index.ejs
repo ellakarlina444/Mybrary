@@ -11,4 +11,11 @@ all authors list
 
 <% authors.forEach(author => { %>
     <div><%= author.name %></div>
+    <a href="/authors/<%= author.id %>">View</a>
+    <a href="/authors/<%= author.id %>/edit">Edit</a>
+    <!-- <form action="/authors/<%= author.id %>?_method=DELETE" method="POST">
+        <button type="submit">Delete</button>
+    </form> _method where we defined it on server.js -->
+
+    <%- include('../partials/deleteForm',{url:`/authors/${author.id}`})  %>
 <%}); %>

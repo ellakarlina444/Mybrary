@@ -29,13 +29,12 @@ router.get('/',async (req,res)=>{
     if(req.query.publishedAfter !=null && req.query.publishedAfter !=""){
         query= query.lte('publishDate',req.query.publishedAfter); //lte is greater than or equal to publishedBefore date
     }
-    console.log(query);
     try {
         // const books=await Book.find({}); find all books
         const books=await query.exec();
         res.render('books/index',{
             books:books,
-            searchOptions:req.query
+            searchOptions:req.query,
         })
         
     } catch (error) {
@@ -66,9 +65,7 @@ router.post('/',upload.single('cover'),async (req,res)=>{ //upload.single('cover
     //note: make sure all the tabel/bookschema di folder models/book.js are the same include all the required must be field
     saveCover(book, req.body.cover)
     try {
-        console.log(book);
         const newBook=await book.save();
-        console.log(newBook);
         //res.redirect(`books/${newBook.id}`)
         res.redirect(`books`)
     } catch (error) {
@@ -79,6 +76,12 @@ router.post('/',upload.single('cover'),async (req,res)=>{ //upload.single('cover
     }
 })
 
+
+
+
+
+
+//LIST OF FUNCTIONS
 function removeBookCover(filename){ //to remove file upload using multer if gagal insert 
     fs.unlink(path.join(uploadPath,filename),err=>{
         if(err){
@@ -109,4 +112,7 @@ function saveCover(book, coverEncoded) {
       book.coverImageType = cover.type
     }
   }
+
+
+
 module.exports=router;
