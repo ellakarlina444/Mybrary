@@ -42,6 +42,8 @@ router.get('/',async (req,res)=>{
     }
 })
 
+
+
 //new book routes
 router.get('/new',async (req,res)=>{
     renderNewPage(res,new Book())
@@ -66,8 +68,8 @@ router.post('/',upload.single('cover'),async (req,res)=>{ //upload.single('cover
     saveCover(book, req.body.cover)
     try {
         const newBook=await book.save();
-        //res.redirect(`books/${newBook.id}`)
-        res.redirect(`books`)
+        res.redirect(`books/${newBook.id}`)
+        // res.redirect(`books`)
     } catch (error) {
         if(book.coverImageName !=null){
             removeBookCover(book.coverImageName)
@@ -77,11 +79,82 @@ router.post('/',upload.single('cover'),async (req,res)=>{ //upload.single('cover
 })
 
 
+router.get('/:id',async(req,res)=>{
+    console.log(req);
+    try {
+        const book=await Book.findById(req.params.id).populate('author').exec();//populate is to get information like name from author collection where we pass it
+        res.render('books/show',{
+            book:book
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.redirect('/')
+    }
+})
 
+router.get('/:id/edit',async(req,res)=>{
+    try {
+        const book=await Book.findById(req.params.id);
+        renderEditPage(res,book)
+        
+    } catch (error) {
+        res.redirect('/')
+    }
+})
 
+//create book route
+router.put('/:id',async (req,res)=>{ //upload.single('cover') is setting up our route to accept file by adding upload.single('cover')with the name of cover where we set it on books/_form_fields.ejs and this gonna save the file to public/uploads/bookCovers
+    //note: make sure all the tabel/bookschema di folder models/book.js are the same include all the required must be field
+    let book
+    try {
+        book=await Book.findById(req.params.id);
+        book.title=req.body.title
+        book.author=req.body.author
+        book.publishDate=new Date(req.body.publishDate)
+        book.pageNumber=req.body.pageCount
+        book.description=req.body.description
+        
+        if(req.body.cover !=null  && req.body.cover !=""){
+            saveCover(book,req.body.cover)
+        }
+        await book.save();
+        res.redirect(`/books/${book.id}`)
+        // res.redirect(`books`)
+    } catch (error) {
+        if(book !=null){
+            renderEditPage(res,book,true,error)
+        }else{
+            res.redirect('/')
+        }
+    }
+})
 
+router.delete('/:id',async (req,res)=>{ //use delete to delete data not get because google will delete every single data if u use get
+   
+    let book //putting here outside trycatch because we need the variable to be accessed inside catch
+    try {
+        book = await Book.findById(req.params.id);
+        await book.deleteOne(); //cek kalo ini ada di books list authornya kalo ada kasi validasi di author schema/schema.pre('remove')
+        res.redirect(`/books`)
+        
+        
+    } catch (error) {
+        if(book == null){
+            res.redirect('/')
+        }else{
+            console.log(error);
+            res.render(`/books/show`,{
+                book:book,
+                errorMessage:"Cannot Delete Book"
+            })
 
+        }
+        
+    }
+})
 //LIST OF FUNCTIONS
+
 function removeBookCover(filename){ //to remove file upload using multer if gagal insert 
     fs.unlink(path.join(uploadPath,filename),err=>{
         if(err){
@@ -91,15 +164,27 @@ function removeBookCover(filename){ //to remove file upload using multer if gaga
     })
 }
 
+async function renderEditPage(res,book,hasError=false,errorMsg){
+    renderFormPage(res,book,'edit',hasError,errorMsg)
+}
 async function renderNewPage(res,book,hasError=false){
+    renderFormPage(res,book,'new',hasError) 
+}
+async function renderFormPage(res,book,form,hasError=false,errorMsg){
     try {
         const authors=await Author.find({})
         const params={
             authors:authors,
             book:book
         }
-        if(hasError)params.errorMessage="Error Creating Book";
-        res.render("books/new",params)
+        if(hasError){
+            if(form==="edit"){
+                params.errorMessage="Error Updating Book " +errorMsg;
+            }else{
+                params.errorMessage="Error Creating Book";
+            }
+        }
+        res.render(`books/${form}`,params)
     } catch (error) {
         res.redirect("books")
     }

@@ -23,4 +23,5 @@ authorSchema.pre("deleteOne", async function (next) {
             next(err);
         }
     });//pre is this will allow us to run method before certain action occurs and going to run any function that we put inside of here before we actually remove the author
-module.exports=mongoose.model('authors',authorSchema);//Author is estensial name of the table (nama tabel)
+module.exports=mongoose.model('author',authorSchema);//Author is estensial name of the table (nama tabel)
+//mongo will make author as authors because it will lowercase and plular it
