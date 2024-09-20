@@ -1,35 +1,39 @@
-<div>
-    <label for="title">Title</label>
-    <input type="text" name="title" value="<%=book.title%>"> <!--<= in percent> make this as html output -->
-</div>
-<div>
-    <label for="">Author</label>
-    <select name="author" id="">
-        <% authors.forEach(author => {  %>
-            <% if (`${author.id}` === `${book.author}`){ %>
-                <option selected label="<%= author.name %>" value="<%= author.id%>">
-            <% } else { %>
-                <option label="<%= author.name %>" value="<%= author.id%>">
-            <%}%>
-        <% }); %>
-    </select>
-</div>
-<div>
-    <label for="">Publish Date</label>
-    <input type="date" name="publishDate" id="" 
-           value="<%= book.publishDate == null?"":book.publishDate.toISOString().split('T')[0] %>"> <!--ex: 2024-09-06T2202 so we split just to get the date-->
-</div>
-<div>
-    <label for="">Page Count</label>
-    <input type="number" name="pageCount" id="" min="1"
-           value="<%= book.publishDate == null?"":book.pageNumber %>">
-</div>
-<div>
-    <label for="">Cover</label>
-    <input type="file" name="cover" class="filepond" value="<%= book.coverImagePath %>"> 
-</div>
-<div>
-    <label for="">Description</label>
-    <textarea type="file" name="description"><%= book.description %> </textarea>
-</div>
+    <div class="form-row">
+        <div class="form-item">
+            <label for="title">Title</label>
+            <input type="text" name="title" value="<%=book.title%>"> <!--<= in percent> make this as html output -->
+        </div>
+        <div class="form-item">
+            <label for="">Author</label>
+            <select name="author" id="">
+                <% authors.forEach(author => {  %>
+                    <% if (`${author.id}` === `${book.author}`){ %>
+                        <option selected label="<%= author.name %>" value="<%= author.id%>">
+                    <% } else { %>
+                        <option label="<%= author.name %>" value="<%= author.id%>">
+                    <%}%>
+                <% }); %>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-item">
+            <label for="">Publish Date</label>
+            <input type="date" name="publishDate" id="" value="<%= book.publishDate == null?"":book.publishDate.toISOString().split('T')[0] %>"> <!--ex: 2024-09-06T2202 so we split just to get the date-->
+        </div>
+        <div class="form-item">
+            <label for="">Page Count</label>
+            <input type="number" name="pageCount" id="" min="1" value="<%= book.publishDate == null?"":book.pageNumber %>">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-item form-item-no-grow">
+            <label for="">Cover</label>
+            <input type="file" name="cover" class="filepond" value="<%= book.coverImagePath %>"> 
+        </div>
+        <div class="form-item">
+            <label for="">Description</label>
+            <textarea type="file" name="description"><%= book.description %> </textarea>
+        </div>
+    </div>
 

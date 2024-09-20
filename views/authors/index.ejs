@@ -1,11 +1,18 @@
 all authors list
 
 <form action="/authors" method="get">
-    
-    <h2>Search Authors</h2>
-    <label for="">Name</label>
-    <input type="text"  name="name" value="<%= searchOptions.name %>">
-    <button type="submit">Search</button>
+    <div class="form-row">
+        <div class="form-item">
+            <h2>Search Authors</h2>
+            <label for="">Name</label>
+            <input type="text"  name="name" value="<%= searchOptions.name %>">
+
+        </div>
+    </div>
+    <div class="form-row form-row-end">
+        <button class="btn btn-primary" type="submit">Search</button>
+
+    </div>
 </form>
 <br>
 
