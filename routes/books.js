@@ -11,7 +11,6 @@ const multer=require('multer');
 const upload=multer({
     dest:uploadPath,
     fileFilter:(req,file,callback)=>{
-        console.log(file);
         callback(null,imageMimeTypes.includes(file.mimetype))
     }
 })
@@ -54,7 +53,6 @@ router.get('/new',async (req,res)=>{
 router.post('/',upload.single('cover'),async (req,res)=>{ //upload.single('cover') is setting up our route to accept file by adding upload.single('cover')with the name of cover where we set it on books/_form_fields.ejs and this gonna save the file to public/uploads/bookCovers
 // router.post('/',async (req,res)=>{ 
     const fileName=req.file !=null?req.file.filename:null;
-    console.log(fileName);
     const book=new Book({
         title:req.body.title,
         author:req.body.author,
@@ -71,6 +69,7 @@ router.post('/',upload.single('cover'),async (req,res)=>{ //upload.single('cover
         res.redirect(`books/${newBook.id}`)
         // res.redirect(`books`)
     } catch (error) {
+        console.log(error);
         if(book.coverImageName !=null){
             removeBookCover(book.coverImageName)
         }
@@ -80,7 +79,6 @@ router.post('/',upload.single('cover'),async (req,res)=>{ //upload.single('cover
 
 
 router.get('/:id',async(req,res)=>{
-    console.log(req);
     try {
         const book=await Book.findById(req.params.id).populate('author').exec();//populate is to get information like name from author collection where we pass it
         res.render('books/show',{
@@ -190,13 +188,18 @@ async function renderFormPage(res,book,form,hasError=false,errorMsg){
     }
 }
 function saveCover(book, coverEncoded) {
-    if (coverEncoded == null) return
-    const cover = JSON.parse(coverEncoded)
-    if (cover != null && imageMimeTypes.includes(cover.type)) {
-      book.coverImage = new Buffer.from(cover.data, 'base64')
-      book.coverImageType = cover.type
+    try {
+        if (coverEncoded == null) return
+        const cover = JSON.parse(coverEncoded)
+        if (cover != null && imageMimeTypes.includes(cover.type)) {
+          book.coverImage = new Buffer.from(cover.data, 'base64')
+          book.coverImageType = cover.type
+        }
+        
+    } catch (error) {
+        console.log(error);
     }
-  }
+}
 
 
 
