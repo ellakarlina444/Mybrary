@@ -30,7 +30,7 @@ router.get('/',async (req,res)=>{
     }
     try {
         // const books=await Book.find({}); find all books
-        const books=await query.exec();
+        const books=await query.populate('author').exec();
         res.render('books/index',{
             books:books,
             searchOptions:req.query,
